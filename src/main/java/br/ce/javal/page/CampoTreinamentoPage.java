@@ -1,15 +1,9 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+package br.ce.javal.page;
+import br.ce.javal.core.basePage;
 
 
-public class CampoTreinamentoPage {
+public class CampoTreinamentoPage extends basePage{
 
-    private WebDriver driver;
-    private DSL dsl = new DSL(driver);
-
-    public CampoTreinamentoPage(WebDriver driver){
-        dsl = new DSL(driver);
-    }
     //=========================== ESCRITA DE TESTE =============================
     public void sugest(){
         dsl.escreve("elementosForm:sugestoes", "teste");
@@ -231,4 +225,36 @@ public class CampoTreinamentoPage {
     public boolean mestrado_existe(){
         return dsl.se_valor_existe_escolaridade("elementosForm:escolaridade","Mestrado");
     }
+
+    //################################# correções drive factory ###################
+   public void superiorporindex() {
+       dsl.comboSelectByIndexpath("Superior");
+   }
+   public void mariaporxpath(){
+       dsl.mariafindXpath();
+       dsl.textoAlerta();
+   }
+   public String primeiro_escolaridade(){
+       return dsl.comboGetTextFirst("elementosForm:escolaridade");
+   }
+   public void selecionarradiomestrado(){
+       dsl.clicarBotaoTabela("Escolaridade","Mestrado", "Radio", "elementosForm:tableUsuarios");
+   }
+   public void nomesetx(){
+       dsl.xpathnomeset();
+
+   }
+   public void sexo_fem_radio_x(){
+       dsl.sexfemxpth();
+
+   }
+   public void labelxpathfind(){
+       dsl.findLabelxpath();
+   }
+   public void doutorado_xpath(){
+
+       dsl.comboSelectByIndexpath("Doutorado");
+
+   }
+
 }

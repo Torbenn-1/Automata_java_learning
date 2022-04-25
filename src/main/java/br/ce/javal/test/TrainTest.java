@@ -1,68 +1,60 @@
+package br.ce.javal.test;
+import br.ce.javal.core.baseTeste;
+import br.ce.javal.core.DSL;
+import static br.ce.javal.core.DriveFactory.getDriver;
+import static br.ce.javal.core.DriveFactory.killDriver;
+
+import br.ce.javal.core.DriveFactory;
 import org.junit.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Select;
-import java.util.List;
+import br.ce.javal.page.CampoTreinamentoPage;
 
-public class TrainTest {
+public class TrainTest extends baseTeste {
     // as global var
-    private WebDriver driver;
     private DSL dsl;
     private CampoTreinamentoPage page;
 
     @Before
     // vai ser o comando executado uma vez antes de cada teste
     public void driver_starter_call(){
-        // no need to "WebDriver driver = new ChromeDriver();"
-        driver = new ChromeDriver();
-        driver.manage().window().minimize();
-        driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-        dsl = new DSL(driver);
-        page = new CampoTreinamentoPage(driver);
 
-    }
+        DriveFactory.getDriver().get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
 
-    @After
-    public void driver_end(){
-        driver.quit();
+        page = new CampoTreinamentoPage();
+
     }
 
 
 // começo de testes
     @Test
     public void XpathnomeTF(){
-        dsl.xpathnomeset();
-
+        page.nomesetx();
     }
     @Test
     public void Xpathradiosexfem(){
-        dsl.sexfemxpth();
+        page.sexo_fem_radio_x();
     }
 
     @Test
     public void findlabelXpath(){
-        dsl.findLabelxpath();
-
+        page.labelxpathfind();
     }
 
     @Test
     public void doutorado () {
-        dsl.comboSelectByIndexpath("Doutorado");
-
+        page.doutorado_xpath();
 
     }
     @Test
     public void Superior () {
-        dsl.comboSelectByIndexpath("Superior");
-
+        page.superiorporindex();
 
     }
 
     @Test
     public void mariaXpath(){
-
-        dsl.mariafindXpath();
-        dsl.textoAlerta();
+        getDriver();
+        page.mariaporxpath();
 
     }
 
@@ -100,7 +92,7 @@ public class TrainTest {
 
 
         page.Superior();
-        Assert.assertEquals("Superior",dsl.comboGetTextFirst("elementosForm:escolaridade"));
+        Assert.assertEquals("Superior", page.primeiro_escolaridade());
     }
 
     @Test
@@ -137,7 +129,7 @@ public class TrainTest {
     @Ignore
     //@Ignore ignora o teste atual passando por ele sem executar
     public void elemento_por_tag() {
-        WebElement voltar = driver.findElement(By.id("resultado"));
+        WebElement voltar = getDriver().findElement(By.id("resultado"));
         //Assert.assertEquals("Obrigado!", button.getAttribute("value"));
         Assert.assertEquals("Voltou!", voltar.getAttribute("value"));
     }
@@ -156,7 +148,7 @@ public class TrainTest {
     public void voltar_validacao() {
         page.voltar();
 
-        Assert.assertEquals("Voltou!", driver.findElement(By.id("resultado")).getText());
+        Assert.assertEquals("Voltou!", getDriver().findElement(By.id("resultado")).getText());
     }
 
     @Test
@@ -172,7 +164,7 @@ public class TrainTest {
 
     @Test
     public void validacao_alert_accept() {
-        driver.findElement(By.id("confirm")).click();
+        getDriver().findElement(By.id("confirm")).click();
 
         Assert.assertEquals("Confirm Simples", page.texto_alert_accept());
     }
@@ -190,7 +182,7 @@ public class TrainTest {
         page.prompt();
 
         // All good
-        Alert alerta = driver.switchTo().alert();
+        Alert alerta = getDriver().switchTo().alert();
         Assert.assertEquals("Digite um numero", alerta.getText());
         alerta.sendKeys("12");
         alerta.accept();
@@ -202,7 +194,7 @@ public class TrainTest {
 
         //alert bad ending with not null
         page.prompt();
-        Alert alert = driver.switchTo().alert();
+        Alert alert = getDriver().switchTo().alert();
         Assert.assertEquals("Digite um numero", alerta.getText());
         alert.sendKeys("12");
         alert.accept();
@@ -212,7 +204,7 @@ public class TrainTest {
         alert.accept();
 
         page.prompt();
-        Alert alertabad = driver.switchTo().alert();
+        Alert alertabad = getDriver().switchTo().alert();
         Assert.assertEquals("Digite um numero", alertabad.getText());
         alertabad.dismiss();
         Assert.assertEquals("Era null?", alertabad.getText());
@@ -256,12 +248,12 @@ public class TrainTest {
     public void find_window() {
         page.PopUpEasy();
 
-        driver.switchTo().window("Popup");
-        driver.findElement(By.tagName("textarea")).sendKeys("Deu certo?");
+        getDriver().switchTo().window("Popup");
+        getDriver().findElement(By.tagName("textarea")).sendKeys("Deu certo?");
         // para retornar para a popup
-        driver.close();
-        driver.switchTo().window("");
-        driver.findElement(By.tagName("textarea")).sendKeys("E agora?");
+        getDriver().close();
+        getDriver().switchTo().window("");
+        getDriver().findElement(By.tagName("textarea")).sendKeys("E agora?");
 
     }
 // teste de window handler para quando não existe nome na janela e não está facil de achar
@@ -272,6 +264,8 @@ public class TrainTest {
         page.windowHandlesTerminal();
 
         page.window_handle_write();
+        killDriver();
+        
     }
     @Test
     public void validacao_regras_de_negocio_nome(){
@@ -321,25 +315,25 @@ public class TrainTest {
     }
     @Test
     public void testJS(){
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("alert('TestandoJS via selenium')");
     }
     @Test
     public void JSelemento(){
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("document.getElementById('elementosForm:nome').value = 'write something'");
         //js.executeScript("document.getElementById('elementosForm:nome').type = 'radio'");
 
-        WebElement element = driver.findElement(By.id("elementosForm:nome"));
+        WebElement element = getDriver().findElement(By.id("elementosForm:nome"));
         js.executeScript("arguments[0].style.border = arguments[1]", element, "solid 4px red");
 
     }
 @Test
     public void clicarbuttontabela(){
-        dsl.clicarBotaoTabela("Escolaridade","Mestrado", "Radio", "elementosForm:tableUsuarios");
+        page.selecionarradiomestrado();
     }
     @Test
     public void teste_de_reducao() {
-        driver.findElement(By.xpath("/html/body/center/form/table/tbody/tr[8]/td[2]/table/tbody/tr[3]/td[5]/table/tbody/tr/td/input")).click();
+        getDriver().findElement(By.xpath("/html/body/center/form/table/tbody/tr[8]/td[2]/table/tbody/tr[3]/td[5]/table/tbody/tr/td/input")).click();
     }
 }

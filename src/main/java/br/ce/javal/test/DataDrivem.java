@@ -1,7 +1,10 @@
+package br.ce.javal.test;
+import br.ce.javal.core.DSL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
+import br.ce.javal.page.CampoTreinamentoPage;
+import br.ce.javal.core.DriveFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,15 +13,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import br.ce.javal.core.baseTeste;
 
 @RunWith(Parameterized.class)
-public class DataDrivem {
-
-    private WebDriver driver;
+public class DataDrivem extends baseTeste{
     private DSL dsl;
     private CampoTreinamentoPage page;
 
@@ -38,16 +38,10 @@ public class DataDrivem {
 
     @Before
     public void inicializa(){
-        driver = new ChromeDriver();
-        driver.manage().window().minimize();
-        driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-        dsl = new DSL(driver);
-        page = new CampoTreinamentoPage(driver);
-    }
 
-    @After
-    public void finaliza(){
-        driver.quit();
+        DriveFactory.getDriver().get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+        dsl = new DSL();
+        page = new CampoTreinamentoPage();
     }
 
     @Parameters

@@ -1,17 +1,20 @@
+package br.ce.javal.core;
+
 //Um dsl serve para facilitar/padronizar e normalizar funções visando dry code
 //assim temos um código no qual não devemos ficar nos repetindo como por exemplo
 //ficar escrevendo o mesmo assert para várias funções, mas vale lembrar deve sempre
 //ser instaciado o driver como uma instancia genéricae global
 
+import static br.ce.javal.core.DriveFactory.getDriver;
+import br.ce.javal.core.DriveFactory;
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
-
-import static br.ce.javal.core.DriveFactory.getDriver;
 
 public class DSL {
 

@@ -1,9 +1,17 @@
+package br.ce.javal.test;
+
+import br.ce.javal.core.DSL;
+import br.ce.javal.core.DriveFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import br.ce.javal.page.CampoTreinamentoPage;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 
@@ -17,11 +25,10 @@ public class SleepSyncro {
     // vai ser o comando executado uma vez antes de cada teste
     public void driver_starter_call(){
         // no need to "WebDriver driver = new ChromeDriver();"
-        driver = new ChromeDriver();
-        driver.manage().window().minimize();
-        driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
-        dsl = new DSL(driver);
-        page = new CampoTreinamentoPage(driver);
+
+        DriveFactory.getDriver().get("file:///" + System.getProperty("user.dir") + "/src/main/resources/componentes.html");
+        dsl = new DSL();
+        page = new CampoTreinamentoPage();
 
     }
 
@@ -47,11 +54,17 @@ public class SleepSyncro {
     public void deve_interagir_com_resposta_demorada_com_timer_ajustado(){
         dsl.marca_clica("buttonDelay");
         //liga a espera
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        DriveFactory.getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         dsl.escreve("novoCampo","Try");
         // desliga a espera
         driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 
+    } @Test
+    public void deve_interagir_com_resposta_demorada_com_timer_ajustado_espera_implicita() throws InterruptedException{
+        dsl.marca_clica("buttonDelay");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("novoCampo")));
+        dsl.escreve("novoCampo", "Deu Certo?");
     }
 
 }
